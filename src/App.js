@@ -8,15 +8,22 @@ import Navbar from './components/navbar';
 import MovieForm from './components/common/movieForm';
 import LoginForm from './components/loginForm';
 import Register from './components/register';
-import AddNewMovieForm from './components/addNewMovieForm';
-export class App extends Component{
+import axios from 'axios'
 
+
+export class App extends Component{
+  
   state = { 
     counters:[
      {id:1, value:4},
      {id:2, value:0},
      {id:3, value:0},
      {id:4, value:0},
+    ],
+    data: [
+      { _id: '1', name: 'Item 1', value: 10 },
+      { _id: '2', name: 'Item 2', value: 20 },
+      { _id: '3', name: 'Item 3', value: 30 }
     ]
      
   } 
@@ -61,10 +68,32 @@ export class App extends Component{
    this.setState({counters})
      console.log("Event handleDelete is called",counterId)
   }
+
+
+  fetchData = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/data'); // Adjust URL as needed
+      this.setState({ data: response.data });
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }}
+
   render() { 
+    
+  
+
     console.log("App-Rendered")
   return (
+    
     <>
+      <div>
+        <h1>Data from MongoDB</h1>
+        <ul>
+          {this.state.data.map(item => (
+            <li key={item._id}>{item.name}: {item.value}</li>
+          ))}
+        </ul>
+      </div>
     <Navbar></Navbar>
     <Routes>
     <Route path='/register'   element={<Register></Register>}></Route>
